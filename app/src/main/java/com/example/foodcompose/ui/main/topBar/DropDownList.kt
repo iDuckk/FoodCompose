@@ -2,6 +2,7 @@ package com.example.foodcompose.ui.main.topBar
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -28,33 +29,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DropDownList() {
+fun DropDownList(modifier: Modifier) {
     val context = LocalContext.current
     val cities = arrayOf("Москва", "Новосибирск", "Минск", "Челябинск", "Уфа")
     var expanded by remember { mutableStateOf(false) }
     var selectedText by remember { mutableStateOf(cities[0]) }
 
     Box(
-        modifier = Modifier
-            .wrapContentHeight()
-            .wrapContentWidth()
-            .padding(5.dp)
+        modifier = modifier
     ) {
         ExposedDropdownMenuBox(
             modifier = Modifier
-                .height(60.dp)
-                .width(180.dp),
+                .fillMaxSize(),
             expanded = expanded,
             onExpandedChange = {
                 expanded = !expanded
             }
         ) {
             TextField(
+                textStyle = TextStyle.Default.copy(fontSize = 16.sp),
                 value = selectedText,
                 onValueChange = {},
                 readOnly = true,
@@ -71,7 +72,7 @@ fun DropDownList() {
                         modifier = Modifier.rotate(if (expanded) 180f else 0f)
                     )
 //                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-                               },
+                },
                 modifier = Modifier
                     .wrapContentSize()
                     .menuAnchor()
@@ -99,5 +100,12 @@ fun DropDownList() {
 @Preview(showBackground = true)
 @Composable
 fun DropMenu() {
-    DropDownList()
+    DropDownList(
+        modifier = Modifier
+            .height(60.dp)
+            .width(180.dp)
+            .wrapContentHeight()
+            .wrapContentWidth()
+            .padding(5.dp)
+    )
 }
