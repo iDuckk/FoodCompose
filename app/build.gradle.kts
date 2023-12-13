@@ -74,4 +74,5 @@ dependencies {
     implementation(libs.retrofit.retrofit)
     implementation(libs.retrofit.converter.gson)
     implementation(libs.coil.compose)
+    implementation(libs.navigation.compose)
 }
