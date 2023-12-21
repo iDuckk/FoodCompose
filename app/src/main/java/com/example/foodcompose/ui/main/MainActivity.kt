@@ -4,13 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.rememberNavController
 import com.example.foodcompose.ui.main.navBottomBar.NavBottomBar
 import com.example.foodcompose.ui.main.topBar.MainTopBar
@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
 //        viewModel.getFoodListByCategory(category = "Seafood")
         setContent {
             FoodComposeTheme {
-                Scaffold()
+                Scaffold(viewModel = viewModel)
             }
         }
     }
@@ -41,24 +41,16 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Scaffold() {
+fun Scaffold(viewModel: MainViewModel) {
     val navController = rememberNavController()
-
     Scaffold(
+        modifier = Modifier.height(1000.dp),
         topBar = {
             MainTopBar()
         },
         bottomBar = { NavBottomBar(navController = navController) }
     )
     { innerPadding ->
-        Navigation(navController = navController, innerPadding = innerPadding)
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FoodComposeTheme {
-        Scaffold()
+        Navigation(navController = navController, innerPadding = innerPadding, viewModel = viewModel)
     }
 }

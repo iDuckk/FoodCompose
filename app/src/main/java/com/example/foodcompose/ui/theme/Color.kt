@@ -11,5 +11,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val Pink1 = Color(0xFFFD3A69)
+val Pink2 = Color(0x33FD3A69)
 val Gray1 = Color(0xFF7B7B7B)
+val Gray2 = Color(0x0D7B7B7B)
 val Gray_nav_bottom_bg = Color(0xFFF0F0F0)

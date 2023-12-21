@@ -1,21 +1,21 @@
 package com.example.foodcompose.ui.main
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.foodcompose.ui.screens.basket.Basket
+import com.example.foodcompose.ui.screens.menu.Menu
+import com.example.foodcompose.ui.screens.profile.Profile
 
 @Composable
 fun Navigation(
     navController: NavHostController,
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    viewModel: MainViewModel
     ) {
     NavHost(
         navController = navController,
@@ -23,28 +23,13 @@ fun Navigation(
         modifier = Modifier.padding(innerPadding)
     ) {
         composable(MainActivity.MENU) {
-            LazyColumn(
-                modifier = Modifier.padding(start = 10.dp, end = 10.dp),
-                content = {
-                    item {
-                        Text(text = MainActivity.MENU)
-                    }
-                })
-
+            Menu(viewModel = viewModel)
         }
         composable(MainActivity.PROFILE) {
-            Box (
-                modifier = Modifier.padding(start = 10.dp, end = 10.dp)
-            ) {
-                Text(text = MainActivity.PROFILE)
-            }
+            Profile()
         }
         composable(MainActivity.BASKET) {
-            Box(
-                modifier = Modifier.padding(start = 10.dp, end = 10.dp)
-            ) {
-                Text(text = MainActivity.BASKET)
-            }
+            Basket()
         }
     }
 }
