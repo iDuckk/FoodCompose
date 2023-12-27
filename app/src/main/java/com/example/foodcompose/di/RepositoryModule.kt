@@ -1,12 +1,12 @@
 package com.example.foodcompose.di
 
-import android.content.Context
-import com.example.foodcompose.data.repository.FoodRepositoryImpl
-import com.example.foodcompose.domain.repository.FoodRepository
+import com.example.foodcompose.data.repository.FoodRepositoryDaoImpl
+import com.example.foodcompose.data.repository.FoodRepositoryNetworkImpl
+import com.example.foodcompose.domain.repository.FoodRepositoryDao
+import com.example.foodcompose.domain.repository.FoodRepositoryNetwork
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -15,10 +15,16 @@ import javax.inject.Singleton
 class  RepositoryModule {
     @Provides
     @Singleton
-    fun provideMovieRepository(
-        repositoryImpl: FoodRepositoryImpl,
-        @ApplicationContext context: Context
-    ): FoodRepository {
+    fun provideFoodRepositoryNetwork(
+        repositoryImpl: FoodRepositoryNetworkImpl
+    ): FoodRepositoryNetwork {
         return repositoryImpl
+    }
+    @Provides
+    @Singleton
+    fun provideFoodRepositoryDao(
+        foodRepositoryDaoImpl: FoodRepositoryDaoImpl
+    ): FoodRepositoryDao {
+        return foodRepositoryDaoImpl
     }
 }

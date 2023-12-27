@@ -4,22 +4,26 @@ import android.content.Context
 import com.example.foodcompose.data.models.Categories
 import com.example.foodcompose.data.models.Meals
 import com.example.foodcompose.data.retrofit.ApiService
-import com.example.foodcompose.domain.repository.FoodRepository
+import com.example.foodcompose.data.room.Dao
+import com.example.foodcompose.domain.repository.FoodRepositoryDao
+import com.example.foodcompose.domain.repository.FoodRepositoryNetwork
 import com.example.foodcompose.utils.NetworkManagerConnection
 import com.example.foodcompose.utils.ResultOf
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
-class FoodRepositoryImpl @Inject constructor(
+class FoodRepositoryNetworkImpl @Inject constructor(
     private val api: ApiService,
+    private val repoDao: FoodRepositoryDao,
     @ApplicationContext private val context: Context
-) : FoodRepository {
+) : FoodRepositoryNetwork {
     override suspend fun getCategories(): ResultOf<Categories> = coroutineScope {
         return@coroutineScope try {
             if (NetworkManagerConnection.invoke(context = context)) {
                 val response = api.getCategory()
                 if (response.isSuccessful) {
+                    repoDao.insertCategoriesDao(response.body()!!.categories)
                     ResultOf.Success(value = response.body()!!)
                 } else {
                     ResultOf.Failure(
