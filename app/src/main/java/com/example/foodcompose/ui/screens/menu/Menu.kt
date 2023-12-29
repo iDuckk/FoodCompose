@@ -73,21 +73,25 @@ fun Menu(viewModel: MainViewModel) {
                             .wrapContentSize()
                             .padding(10.dp),
                         content = {
-                            items(items = viewModel.categories.value!!, itemContent = { category ->
-                                CategoryItem(
-                                    category = category,
-                                    isSelected = viewModel.isSelected,
-                                    onClick = {
-                                        viewModel.isSelected.value = it
-                                        viewModel.getFoodListByCategory(it)
-                                    })
-                            })
+                            if (viewModel.categories.value != null) {
+                                items(items = viewModel.categories.value!!, itemContent = { category ->
+                                    CategoryItem(
+                                        category = category,
+                                        isSelected = viewModel.isSelected,
+                                        onClick = {
+                                            viewModel.isSelected.value = it
+                                            viewModel.getFoodListByCategory(it)
+                                        })
+                                })
+                            }
                         })
                 }
 
                 item {
-                    viewModel.foodList.collectAsState().value!!.forEach {
-                        FoodItem(meal = it)
+                    if (viewModel.foodList.collectAsState().value != null) {
+                        viewModel.foodList.collectAsState().value?.forEach {
+                            FoodItem(meal = it)
+                        }
                     }
                 }
 

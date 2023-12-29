@@ -1,6 +1,7 @@
 package com.example.foodcompose.data.repository
 
 import android.content.Context
+import android.util.Log
 import com.example.foodcompose.data.models.Categories
 import com.example.foodcompose.data.models.Meals
 import com.example.foodcompose.data.retrofit.ApiService
@@ -23,7 +24,7 @@ class FoodRepositoryNetworkImpl @Inject constructor(
             if (NetworkManagerConnection.invoke(context = context)) {
                 val response = api.getCategory()
                 if (response.isSuccessful) {
-                    repoDao.insertCategoriesDao(response.body()!!.categories)
+                    repoDao.insertCategoriesDao(list = response.body()!!.categories)
                     ResultOf.Success(value = response.body()!!)
                 } else {
                     ResultOf.Failure(
@@ -32,10 +33,7 @@ class FoodRepositoryNetworkImpl @Inject constructor(
                     )
                 }
             } else {
-                ResultOf.Failure(
-                    message = "No internet connection",
-                    code = 0
-                )
+                ResultOf.Cache(value = Categories(repoDao.getCategoriesDao()))
             }
         } catch (e: Exception) {
             ResultOf.Failure(throwable = e)
@@ -47,6 +45,7 @@ class FoodRepositoryNetworkImpl @Inject constructor(
             if (NetworkManagerConnection.invoke(context = context)) {
                 val response = api.getFoodListByCategory(category = category)
                 if (response.isSuccessful) {
+                    repoDao.insertFoodDao(list = response.body()!!.mealsList.map { it.copy(strCategory = category) })
                     ResultOf.Success(value = response.body()!!)
                 } else {
                     ResultOf.Failure(
@@ -55,10 +54,7 @@ class FoodRepositoryNetworkImpl @Inject constructor(
                     )
                 }
             } else {
-                ResultOf.Failure(
-                    message = "No internet connection",
-                    code = 0
-                )
+                ResultOf.Cache(value = Meals(repoDao.getFoodListByCategoryDao(category = category)))
             }
         } catch (e: Exception) {
             ResultOf.Failure(throwable = e)

@@ -28,6 +28,11 @@ class MainViewModel @Inject constructor(
     val categories = MutableStateFlow<List<Category>?>(null)
     val foodList = MutableStateFlow<List<Meal>?>(null)
     val isSelected = MutableStateFlow<String>("Beef")
+    private val toastNoInternet = Toast.makeText(
+        application,
+        "No internet connection",
+        Toast.LENGTH_SHORT
+    )
 
     init {
         getCategories()
@@ -39,15 +44,6 @@ class MainViewModel @Inject constructor(
             when (val result = getCategoriesUseCase.invoke()) {
                 is ResultOf.Failure -> {
                     if (result.throwable == null) {
-                        if (result.code == 0) {
-                            launch(Dispatchers.Main) {
-                                Toast.makeText(
-                                    application,
-                                    "No internet connection",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
                         Log.e("TAG", "getMovies: ${result.message}")
                     } else {
                         Log.e("TAG", "getMovies: ", result.throwable)
@@ -59,6 +55,15 @@ class MainViewModel @Inject constructor(
                         result.value.categories
                     }.await()
                 }
+
+                is ResultOf.Cache -> {
+                    categories.value = async {
+                        result.value.categories
+                    }.await()
+                    launch(Dispatchers.Main) {
+                        toastNoInternet.show()
+                    }
+                }
             }
         }
     }
@@ -68,15 +73,6 @@ class MainViewModel @Inject constructor(
             when (val result = getFoodListByCategoryUseCase.invoke(category = category)) {
                 is ResultOf.Failure -> {
                     if (result.throwable == null) {
-                        if (result.code == 0) {
-                            launch(Dispatchers.Main) {
-                                Toast.makeText(
-                                    application,
-                                    "No internet connection",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
                         Log.e("TAG", "getMovies: ${result.message}")
                     } else {
                         Log.e("TAG", "getMovies: ", result.throwable)
@@ -87,6 +83,15 @@ class MainViewModel @Inject constructor(
                     foodList.value = async {
                         result.value.mealsList
                     }.await()
+                }
+
+                is ResultOf.Cache -> {
+                    foodList.value = async {
+                        result.value.mealsList
+                    }.await()
+                    launch(Dispatchers.Main) {
+                        toastNoInternet.show()
+                    }
                 }
             }
         }
